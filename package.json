@@ -1,0 +1,17 @@
+{
+  "name": "discipline",
+  "version": "1.0.0",
+  "private": true,
+  "description": "DISCIPLINE - blocks gooner sites and turns every clean day into XP, levels and streaks",
+  "main": "preview.js",
+  "scripts": {
+    "start": "node preview.js",
+    "dev": "node --watch preview.js",
+    "build": "node scripts/build-extension.js",
+    "test": "node --test tests/*.test.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "license": "MIT"
+}

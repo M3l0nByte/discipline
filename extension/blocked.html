@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Blocked — DISCIPLINE</title>
+  <link rel="stylesheet" href="blocked.css" />
+</head>
+<body>
+  <div class="wrap">
+    <div class="shield" aria-hidden="true">🛡</div>
+    <p class="kicker">access denied</p>
+    <h1>Not today.<br /><em>Stay on your streak.</em></h1>
+    <p class="lead">You blocked this on purpose. The urge is a wave — ride it out.</p>
+    <p class="domain" id="domain"></p>
+
+    <div class="streakbox" id="streakBox" hidden>
+      <b id="streakDays">0</b><span id="streakLabel">day streak · keep it</span>
+    </div>
+
+    <div class="breath" id="breath"><span id="breathPhase">Breathe in</span></div>
+
+    <ol>
+      <li>Stand up and leave the room. Change the physical input.</li>
+      <li>Cold water on your face, or a full glass drunk slowly.</li>
+      <li>20 push-ups, 20 squats, or a 30 second cold shower.</li>
+      <li>Message someone. Do not sit in the urge alone.</li>
+    </ol>
+
+    <div class="actions">
+      <button class="primary" id="urgeBtn">I beat the urge (+5 XP)</button>
+      <button class="ghost" id="closeBtn">Close this tab</button>
+    </div>
+
+    <p class="foot" id="foot">DISCIPLINE · this page blocked you on purpose</p>
+  </div>
+  <script src="blocked.js"></script>
+</body>
+</html>

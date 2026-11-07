@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <link rel="stylesheet" href="popup.css" />
+</head>
+<body>
+  <header class="head">
+    <span class="mark">◈</span>
+    <span class="name">DISCIPLINE</span>
+    <button class="icon-btn" id="optionsBtn" title="Settings">⚙</button>
+  </header>
+
+  <section class="hero">
+    <div class="ring" id="ring" style="--p:0">
+      <div class="ring__inner">
+        <span class="ring__lvl">LVL</span>
+        <span class="ring__num" id="level">1</span>
+      </div>
+    </div>
+    <div class="hero__info">
+      <div class="title" id="title">Recruit</div>
+      <div class="xp">
+        <div class="xp__bar"><div class="xp__fill" id="xpFill"></div></div>
+        <div class="xp__text"><span id="xpText">0 / 100 XP</span><span id="xpNext"></span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="streak">
+    <span class="streak__flame" id="flame">🔥</span>
+    <span class="streak__num" id="streak">0</span>
+    <span class="streak__unit" id="streakUnit">days clean</span>
+  </section>
+
+  <div class="grid">
+    <div class="mini"><span class="mini__l">best</span><span class="mini__v" id="best">0</span></div>
+    <div class="mini"><span class="mini__l">clean</span><span class="mini__v" id="clean">0</span></div>
+    <div class="mini"><span class="mini__l">urges</span><span class="mini__v" id="urges">0</span></div>
+  </div>
+
+  <button class="btn btn--primary" id="checkinBtn">I stayed clean today</button>
+  <div class="row">
+    <button class="btn btn--ghost" id="urgeBtn">Beat an urge</button>
+    <button class="btn btn--ghost" id="dashboardBtn">Dashboard</button>
+  </div>
+
+  <footer class="foot">
+    <span class="dot" id="statusDot"></span>
+    <span id="statusText">checking…</span>
+    <label class="switch">
+      <input type="checkbox" id="enabledToggle" />
+      <span>blocking</span>
+    </label>
+  </footer>
+
+  <div class="toast" id="toast" hidden></div>
+  <script src="popup.js"></script>
+</body>
+</html>

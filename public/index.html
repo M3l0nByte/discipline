@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>DISCIPLINE — no fap, all XP</title>
+  <meta name="description" content="Blocks the gooner sites and turns every clean day into XP, levels and streaks." />
+  <meta name="theme-color" content="#08090c" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Sora:wght@400;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="grain" aria-hidden="true"></div>
+  <div class="glow glow--lime" aria-hidden="true"></div>
+  <div class="glow glow--ember" aria-hidden="true"></div>
+
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand__mark" aria-hidden="true">◈</span>
+      <span class="brand__name">DISCIPLINE</span>
+      <span class="brand__tag">no fap · all xp</span>
+    </div>
+    <div class="topbar__right">
+      <button class="toggle" id="strictToggle" role="switch" aria-checked="true" title="Strict mode">
+        <span class="toggle__track"><span class="toggle__thumb"></span></span>
+        <span class="toggle__label">Strict mode</span>
+      </button>
+      <span class="statusdot" id="connStatus" title="Connection status"><i></i><span>synced</span></span>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <!-- HERO -->
+    <section class="hero">
+      <div class="hero__left">
+        <div class="rank">
+          <div class="rank__ring" id="rankRing" style="--p:0">
+            <div class="rank__inner">
+              <span class="rank__label">level</span>
+              <span class="rank__value" id="levelValue">1</span>
+            </div>
+          </div>
+          <div class="rank__title" id="rankTitle">Recruit</div>
+        </div>
+      </div>
+
+      <div class="hero__mid">
+        <p class="kicker">current streak</p>
+        <div class="streak">
+          <span class="streak__flame" id="streakFlame" aria-hidden="true">🔥</span>
+          <span class="streak__value" id="streakValue">0</span>
+          <span class="streak__unit" id="streakUnit">days</span>
+        </div>
+        <p class="hero__sub" id="heroSub">Press the button. One clean day = XP.</p>
+
+        <div class="xpbar" id="xpbar">
+          <div class="xpbar__fill" id="xpFill" style="width:0%"></div>
+          <div class="xpbar__text">
+            <span id="xpText">0 / 100 XP</span>
+            <span id="xpNext">next level in 100 XP</span>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button class="btn btn--primary" id="checkinBtn">
+            <span class="btn__icon">✔</span>
+            <span class="btn__label">I stayed clean today</span>
+          </button>
+          <button class="btn btn--ghost" id="panicBtn">
+            <span class="btn__icon">🛡</span>
+            <span class="btn__label">Urge right now</span>
+          </button>
+          <button class="btn btn--danger-ghost" id="relapseBtn">
+            <span class="btn__icon">↺</span>
+            <span class="btn__label">I relapsed</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="hero__right">
+        <div class="milestone card card--tight">
+          <p class="kicker">next milestone</p>
+          <div class="milestone__name" id="msName">First Blood</div>
+          <div class="milestone__days"><span id="msDays">1</span> <small>days</small></div>
+          <div class="milestone__bar"><div class="milestone__fill" id="msFill"></div></div>
+          <p class="milestone__hint" id="msHint">1 day to go · +25 XP bonus</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- STATS -->
+    <section class="stats" id="stats">
+      <div class="stat card">
+        <span class="stat__label">best streak</span>
+        <span class="stat__value" id="statBest">0</span>
+        <span class="stat__unit">days</span>
+      </div>
+      <div class="stat card">
+        <span class="stat__label">clean days</span>
+        <span class="stat__value" id="statClean">0</span>
+        <span class="stat__unit">total</span>
+      </div>
+      <div class="stat card">
+        <span class="stat__label">urges beaten</span>
+        <span class="stat__value" id="statUrges">0</span>
+        <span class="stat__unit" id="statUrgesUnit">today 0/5</span>
+      </div>
+      <div class="stat card">
+        <span class="stat__label">relapses</span>
+        <span class="stat__value stat__value--warn" id="statRelapses">0</span>
+        <span class="stat__unit">resets</span>
+      </div>
+      <div class="stat card">
+        <span class="stat__label">total xp</span>
+        <span class="stat__value" id="statXP">0</span>
+        <span class="stat__unit">points</span>
+      </div>
+    </section>
+
+    <!-- HISTORY -->
+    <section class="panel card">
+      <div class="panel__head">
+        <h2>Last 28 days</h2>
+        <div class="legend">
+          <span><i class="dot dot--clean"></i>clean</span>
+          <span><i class="dot dot--relapse"></i>relapse</span>
+          <span><i class="dot dot--none"></i>no data</span>
+        </div>
+      </div>
+      <div class="heatmap" id="heatmap" aria-label="28 day history"></div>
+      <p class="panel__foot" id="historyFoot">Start checking in to build your record.</p>
+    </section>
+
+    <!-- BLOCKER -->
+    <section class="panel card" id="blocker">
+      <div class="panel__head">
+        <h2>Site blocker</h2>
+        <span class="pill" id="blockCount">0 domains</span>
+      </div>
+      <p class="panel__lead">
+        These domains are blocked. Add your own with a plain domain, a wildcard
+        (<code>*.example.com</code>) or a path (<code>reddit.com/r/nsfw</code>).
+        The browser extension enforces this list across every site you visit.
+      </p>
+      <form class="addform" id="addBlockForm">
+        <input type="text" id="addBlockInput" placeholder="add a domain, e.g. example.com" autocomplete="off" spellcheck="false" />
+        <button class="btn btn--primary btn--sm" type="submit">Block it</button>
+      </form>
+      <div class="chips" id="blockChips"></div>
+      <details class="pathrules">
+        <summary>Path rules (<span id="pathRuleCount">0</span>)</summary>
+        <div class="chips chips--path" id="pathChips"></div>
+      </details>
+      <p class="panel__foot" id="extHint">
+        Nothing is blocked until you install the extension — it is what shuts the
+        sites down across Chrome or Firefox. Grab it from the
+        <a href="https://github.com/M3l0nByte/discipline" target="_blank" rel="noopener">GitHub repo</a>
+        and load the <code>dist/chrome</code> or <code>dist/firefox</code> folder.
+      </p>
+    </section>
+
+    <!-- SETTINGS -->
+    <section class="panel card" id="settings">
+      <div class="panel__head"><h2>Settings</h2></div>
+      <div class="fields">
+        <label class="field">
+          <span>Display name</span>
+          <input type="text" id="nameInput" maxlength="40" autocomplete="off" />
+        </label>
+        <label class="field">
+          <span>Day rolls over at</span>
+          <select id="offsetSelect">
+            <option value="0">Midnight (00:00)</option>
+            <option value="180">3:00 AM</option>
+            <option value="240">4:00 AM</option>
+            <option value="300">5:00 AM</option>
+          </select>
+        </label>
+        <label class="field field--inline">
+          <input type="checkbox" id="notifyToggle" />
+          <span>Remind me to check in</span>
+        </label>
+      </div>
+      <div class="panel__actions">
+        <button class="btn btn--ghost btn--sm" id="saveSettings">Save</button>
+        <button class="btn btn--danger-ghost btn--sm" id="resetBtn">Reset everything</button>
+      </div>
+      <p class="panel__foot" id="dataPath">Data stored locally on your machine.</p>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <span>DISCIPLINE · built to keep you honest</span>
+    <span class="foot__meta" id="footMeta"></span>
+  </footer>
+
+  <!-- PANIC OVERLAY -->
+  <div class="overlay" id="panicOverlay" hidden>
+    <div class="panic">
+      <button class="overlay__close" id="panicClose" aria-label="Close">✕</button>
+      <p class="kicker">hold the line</p>
+      <h2 class="panic__title">Breathe. This passes in 90 seconds.</h2>
+      <div class="breath">
+        <div class="breath__circle" id="breathCircle">
+          <span class="breath__phase" id="breathPhase">Breathe in</span>
+        </div>
+      </div>
+      <ol class="panic__steps">
+        <li>Stand up and leave the room. Change the physical input.</li>
+        <li>Drink a full glass of cold water.</li>
+        <li>20 push-ups, 20 squats, or a cold 30 second shower.</li>
+        <li>Text someone. Say anything.</li>
+      </ol>
+      <div class="panic__actions">
+        <button class="btn btn--primary" id="urgeBtn">
+          <span class="btn__icon">🛡</span>
+          <span class="btn__label">I beat the urge <b id="urgeXp">+5 XP</b></span>
+        </button>
+        <button class="btn btn--ghost" id="panicDone">Close</button>
+      </div>
+      <p class="panic__foot" id="panicFoot">Beating an urge earns XP — up to 5 times a day.</p>
+    </div>
+  </div>
+
+  <!-- RELAPSE MODAL -->
+  <div class="overlay" id="relapseOverlay" hidden>
+    <div class="modal">
+      <button class="overlay__close" id="relapseClose" aria-label="Close">✕</button>
+      <p class="kicker">honesty check</p>
+      <h2 class="modal__title">Reset your streak?</h2>
+      <p class="modal__body">
+        Logging a relapse resets the streak to zero. Your total XP, level and clean
+        day count stay — this is data, not punishment. It only counts if you are honest.
+      </p>
+      <textarea id="relapseNote" placeholder="Optional: what triggered it? (helps you spot the pattern)" maxlength="280"></textarea>
+      <div class="modal__actions">
+        <button class="btn btn--ghost" id="relapseCancel">Never mind</button>
+        <button class="btn btn--danger" id="relapseConfirm">Yes, reset it</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CELEBRATION -->
+  <div class="overlay overlay--clear" id="celebrateOverlay" hidden>
+    <div class="celebrate">
+      <div class="celebrate__burst" id="burst"></div>
+      <p class="kicker" id="celebrateKicker">level up</p>
+      <div class="celebrate__big" id="celebrateBig">Level 2</div>
+      <p class="celebrate__sub" id="celebrateSub">+25 XP earned today</p>
+      <button class="btn btn--primary" id="celebrateClose">Keep going</button>
+    </div>
+  </div>
+
+  <div class="toasts" id="toasts" aria-live="polite"></div>
+
+  <script src="lib/engine.js"></script>
+  <script src="lib/blocklist.js"></script>
+  <script src="lib/state.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

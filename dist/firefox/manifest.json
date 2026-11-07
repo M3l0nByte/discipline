@@ -1,0 +1,67 @@
+{
+  "manifest_version": 2,
+  "name": "DISCIPLINE — block the goon, earn the XP",
+  "version": "1.0.0",
+  "description": "Blocks gooner sites and turns every clean day into XP, levels and streaks. Links up with the DISCIPLINE website.",
+  "icons": {
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "browser_action": {
+    "default_title": "DISCIPLINE",
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "32": "icons/icon32.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "background": {
+    "scripts": [
+      "lib/engine.js",
+      "lib/blocklist.js",
+      "lib/state.js",
+      "rulebuilder.js",
+      "background.js"
+    ],
+    "persistent": true
+  },
+  "options_ui": {
+    "page": "options.html",
+    "open_in_tab": true
+  },
+  "permissions": [
+    "declarativeNetRequest",
+    "storage",
+    "alarms",
+    "notifications",
+    "tabs",
+    "<all_urls>"
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "http://localhost/*",
+        "https://*.github.io/*"
+      ],
+      "js": [
+        "content.js"
+      ],
+      "run_at": "document_start"
+    }
+  ],
+  "web_accessible_resources": [
+    "blocked.html",
+    "blocked.css",
+    "blocked.js"
+  ],
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "discipline@m3l0nbyte.github.io",
+      "strict_min_version": "109.0"
+    }
+  }
+}

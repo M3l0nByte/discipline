@@ -1,0 +1,13 @@
+{
+  "name": "DISCIPLINE",
+  "short_name": "DISCIPLINE",
+  "description": "Blocks gooner sites and turns every clean day into XP, levels and streaks.",
+  "start_url": ".",
+  "scope": ".",
+  "display": "standalone",
+  "background_color": "#08090c",
+  "theme_color": "#08090c",
+  "icons": [
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ]
+}

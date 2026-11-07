@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Blocked — DISCIPLINE</title>
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Sora:wght@400;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet" />
+  <style>
+    :root { --lime:#c6f24e; --ember:#ff6a2b; --danger:#ff4d6d; --line:#232833; --muted:#8b93a5; }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; min-height: 100vh; display: grid; place-items: center; padding: 24px;
+      background: radial-gradient(900px 600px at 80% -10%, #1a1220 0%, transparent 60%),
+                  radial-gradient(700px 500px at -10% 20%, #1c2410 0%, transparent 55%), #08090c;
+      color: #eef1f6; font-family: "Sora", system-ui, sans-serif; text-align: center;
+    }
+    .wrap { max-width: 620px; width: 100%; }
+    .shield { font-size: 64px; filter: drop-shadow(0 0 24px rgba(198,242,78,0.5)); }
+    .kicker { font-family: "JetBrains Mono", monospace; font-size: 11px; letter-spacing: 0.24em; text-transform: uppercase; color: var(--lime); margin: 18px 0 8px; }
+    h1 { font-family: "Anton", sans-serif; font-size: clamp(40px, 9vw, 76px); line-height: 0.94; text-transform: uppercase; letter-spacing: 0.02em; margin: 0 0 14px; }
+    h1 em { color: var(--ember); font-style: normal; }
+    p.lead { color: var(--muted); font-size: 16px; margin: 0 0 8px; }
+    .domain { font-family: "JetBrains Mono", monospace; font-size: 13px; color: var(--ember); word-break: break-all; margin-bottom: 26px; }
+    .streakbox { display: inline-flex; align-items: baseline; gap: 10px; margin-bottom: 26px; padding: 14px 22px; border: 1px solid var(--line); border-radius: 999px; background: #0d0f14; }
+    .streakbox b { font-family: "Anton", sans-serif; font-size: 30px; color: var(--lime); }
+    .streakbox span { font-family: "JetBrains Mono", monospace; font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; }
+    ol { text-align: left; color: var(--muted); font-size: 15px; display: grid; gap: 10px; max-width: 420px; margin: 0 auto 28px; padding-left: 20px; }
+    ol li::marker { color: var(--lime); font-family: "JetBrains Mono", monospace; }
+    .actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+    button, a.btn {
+      font-family: "Sora", sans-serif; font-weight: 700; font-size: 14.5px;
+      padding: 13px 24px; border-radius: 999px; border: 1px solid transparent; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 8px;
+    }
+    .primary { background: linear-gradient(180deg, var(--lime), #9bd321); color: #0a0c11; }
+    .ghost { background: transparent; border-color: var(--line); color: #eef1f6; }
+    .ghost:hover { border-color: var(--lime); color: var(--lime); }
+    .breath { margin: 0 auto 24px; width: 120px; height: 120px; border-radius: 50%; display: grid; place-items: center; border: 1px solid rgba(198,242,78,0.35); background: radial-gradient(circle at 50% 40%, rgba(198,242,78,0.16), transparent 70%); transition: transform 4s ease-in-out; }
+    .breath.inhale { transform: scale(1.2); }
+    .breath span { font-family: "JetBrains Mono", monospace; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--lime); }
+    .foot { margin-top: 34px; font-family: "JetBrains Mono", monospace; font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: #5d6577; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="shield" aria-hidden="true">🛡</div>
+    <p class="kicker">access denied</p>
+    <h1>Not today.<br /><em>Stay on your streak.</em></h1>
+    <p class="lead">This site is on your blocklist. You set that rule for a reason.</p>
+    <p class="domain" id="domain">blocked domain</p>
+
+    <div class="streakbox" id="streakBox" hidden>
+      <b id="streakDays">0</b><span id="streakLabel">day streak · keep it</span>
+    </div>
+
+    <div class="breath" id="breath"><span id="breathPhase">Breathe in</span></div>
+
+    <ol>
+      <li>Stand up and leave the room.</li>
+      <li>Cold water on your face or a full glass, slowly.</li>
+      <li>20 push-ups or a 30 second cold shower.</li>
+      <li>Message someone. Do not sit in the urge alone.</li>
+    </ol>
+
+    <div class="actions">
+      <button class="primary" id="urgeBtn">I beat the urge (+5 XP)</button>
+      <a class="btn ghost" id="dashboardLink" href="./">Back to dashboard</a>
+    </div>
+
+    <p class="foot" id="foot">DISCIPLINE · this page blocked you on purpose</p>
+  </div>
+
+  <script src="lib/engine.js"></script>
+  <script src="lib/blocklist.js"></script>
+  <script src="lib/state.js"></script>
+  <script>
+    const params = new URLSearchParams(location.search);
+    const target = params.get('url') || params.get('u') || '';
+    let host = params.get('domain') || '';
+    if (!host && target) { try { host = new URL(target).hostname; } catch (e) {} }
+    if (host) document.getElementById('domain').textContent = host;
+
+    // This page reads the same storage the dashboard writes to.
+    const KEY = 'discipline.state.v1';
+    function read() {
+      try { return DisciplineState.migrate(JSON.parse(localStorage.getItem(KEY) || 'null')); }
+      catch (e) { return DisciplineState.migrate(null); }
+    }
+    function write(state) {
+      try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) {}
+      return state;
+    }
+
+    const state = read();
+    const s = DisciplineState.buildSummary(state);
+    document.getElementById('streakDays').textContent = s.streak;
+    document.getElementById('streakLabel').textContent = `day streak · level ${s.level} ${s.title}`;
+    document.getElementById('streakBox').hidden = false;
+    document.getElementById('foot').textContent = `DISCIPLINE · level ${s.level} ${s.title} · ${s.xp} XP`;
+
+    document.getElementById('urgeBtn').addEventListener('click', () => {
+      const data = DisciplineState.logUrge(state);
+      write(state);
+      document.getElementById('urgeBtn').textContent = data.capped ? 'Win counted — bonus maxed' : `Logged. +${data.xp} XP. Now walk away.`;
+      document.getElementById('urgeBtn').disabled = true;
+    });
+
+    // Breathing pacer
+    const breath = document.getElementById('breath');
+    const phase = document.getElementById('breathPhase');
+    let inhaling = false;
+    setInterval(() => {
+      inhaling = !inhaling;
+      breath.classList.toggle('inhale', inhaling);
+      phase.textContent = inhaling ? 'Breathe in' : 'Breathe out';
+    }, 4000);
+  </script>
+</body>
+</html>
