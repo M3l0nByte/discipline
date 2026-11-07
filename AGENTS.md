@@ -39,4 +39,9 @@ Zero runtime dependencies. Node built-ins only.
   from the blocklist; there is no static rules JSON. The redirect target must be
   an absolute URL from `runtime.getURL`, not a relative path.
 - A GitHub App installation token cannot create repositories under a user
-  account. Deployment needs a repo to exist first.
+  account, and the OpenHands AI app has no Pages permission, so the Pages API
+  returns `Resource not accessible by integration`. The workflow therefore
+  publishes `public/` to the `gh-pages` branch with `contents: write` instead of
+  using `actions/deploy-pages`.
+- GitHub Pages is configured to serve the `gh-pages` branch. The live site is
+  https://m3l0nbyte.github.io/discipline/ and updates on every push to `main`.

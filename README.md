@@ -113,11 +113,26 @@ You only need this if you want to change the code.
 
 ```bash
 npm start          # http://localhost:12000
-npm test           # 27 tests
+npm test           # 33 tests
 npm run build      # rebuild dist/chrome and dist/firefox
 ```
 
 Requires Node.js 18 or newer. There are no dependencies.
+
+---
+
+## Deployment
+
+Every push to `main` runs the workflow in `.github/workflows/pages.yml`:
+
+1. `npm test` — the 33 tests must pass
+2. `npm run build` — both extension builds are validated and uploaded as the
+   `extensions` artifact
+3. the contents of `public/` are published to the `gh-pages` branch
+
+GitHub Pages serves that branch at the URL above, so the live site is always the
+last commit that passed the tests. Nothing to configure — edit `public/`, push to
+`main`, and the site updates a minute later.
 
 ---
 
